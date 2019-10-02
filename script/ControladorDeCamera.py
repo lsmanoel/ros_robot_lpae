@@ -32,9 +32,9 @@ class ControladorDeCamera(object):
 
             _, frame_input = video_capture.read()
  
- 			output_frame = cv2.resize(frame_input, (320, 240), interpolation = cv2.INTER_AREA)
- 			
- 			cv2.resize()
+            output_frame = cv2.resize(frame_input, (320, 240), interpolation = cv2.INTER_AREA)
+            
+            cv2.resize()
             self.pub_signal.publish(self.bridge.cv2_to_imgmsg(output_frame))
 
 
