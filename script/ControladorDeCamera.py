@@ -26,12 +26,15 @@ class ControladorDeCamera(object):
         while not rospy.is_shutdown():
             self.rate.sleep()
 
-            if not video_capture.grab():
-                print("No more frames")
-                break
+#            if not video_capture.grab():
+#                print("No more frames")
+#                break
 
-            _, output_frame = video_capture.retrieve()
-
+            _, frame_input = video_capture.read()
+ 
+ 			output_frame = cv2.resize(frame_input, (320, 240), interpolation = cv2.INTER_AREA)
+ 			
+ 			cv2.resize()
             self.pub_signal.publish(self.bridge.cv2_to_imgmsg(output_frame))
 
 

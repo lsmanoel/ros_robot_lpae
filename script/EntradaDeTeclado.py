@@ -7,6 +7,7 @@ import time
 import roslib
 import rospy
 from std_msgs.msg import Int8
+from std_msgs.msg import Bool
 
 def EntradaDeTeclado():
     pygame.init()
@@ -14,7 +15,7 @@ def EntradaDeTeclado():
     screen = pygame.display.set_mode(screen_size)
     pub_L_command = rospy.Publisher('keyboard_L_command', Int8, queue_size=10)
     pub_R_command = rospy.Publisher('keyboard_R_command', Int8, queue_size=10)
-	pub_break_command = rospy.Publisher('break_command', Bool, queue_size=10)
+    pub_break_command = rospy.Publisher('break_command', Bool, queue_size=10)
 
     rospy.init_node('keyboard_pygame_control', anonymous=True)
 
