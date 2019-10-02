@@ -21,6 +21,9 @@ class ControladorDeCamera(object):
 
     def main_loop(self):
         video_capture = cv2.VideoCapture(self.video_source)
+        video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 320.0)
+        video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 240.0)
+
         self.signals_publisher_init()
 
         while not rospy.is_shutdown():
@@ -32,10 +35,9 @@ class ControladorDeCamera(object):
 
             _, frame_input = video_capture.read()
  
-            output_frame = cv2.resize(frame_input, (320, 240), interpolation = cv2.INTER_AREA)
-            
-            cv2.resize()
-            self.pub_signal.publish(self.bridge.cv2_to_imgmsg(output_frame))
+            #output_frame = cv2.resize(frame_input, (320, 240), interpolation = cv2.INTER_AREA)
+
+            self.pub_signal.publish(self.bridge.cv2_to_imgmsg(frame_input))
 
 
 # ======================================================================================================================
