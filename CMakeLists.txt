@@ -118,10 +118,6 @@ catkin_package(
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(ControladorDeCamera src/ControladorDeCamera.cpp)
-target_link_libraries(ControladorDeCamera ${catkin_LIBRARIES})
-target_link_libraries(ControladorDeCamera ${OpenCV_LIBRARIES})
-
 add_executable(show_frame src/show_frame.cpp)
 target_link_libraries(show_frame ${catkin_LIBRARIES})
 target_link_libraries(show_frame ${OpenCV_LIBRARIES})
