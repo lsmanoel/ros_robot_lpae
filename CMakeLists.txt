@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  #vision_opencv
+  image_transport
 )
 
 ## System dependencies are found with CMake's conventions
@@ -118,13 +118,13 @@ catkin_package(
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(show_frame src/show_frame.cpp)
-target_link_libraries(show_frame ${catkin_LIBRARIES})
-target_link_libraries(show_frame ${OpenCV_LIBRARIES})
+#add_executable(show_frame src/show_frame.cpp)
+#target_link_libraries(show_frame ${catkin_LIBRARIES})
+#target_link_libraries(show_frame ${OpenCV_LIBRARIES})
 
-add_executable(talker_frame src/talker_frame.cpp)
-target_link_libraries(talker_frame ${catkin_LIBRARIES})
-target_link_libraries(talker_frame ${OpenCV_LIBRARIES})
+add_executable(robot_vision src/robot_vision.cpp)
+target_link_libraries(robot_vision ${catkin_LIBRARIES})
+target_link_libraries(robot_vision ${OpenCV_LIBRARIES})
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
