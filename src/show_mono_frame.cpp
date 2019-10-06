@@ -7,23 +7,23 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
   try
   {
-    cv::imshow("view", cv_bridge::toCvShare(msg, "bgr8")->image);
+    cv::imshow("show_mono_frame", cv_bridge::toCvShare(msg, "mono8")->image);
     cv::waitKey(30);
   }
   catch (cv_bridge::Exception& e)
   {
-    ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+    ROS_ERROR("Could not convert from '%s' to 'mono8'.", msg->encoding.c_str());
   }
 }
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "image_listener");
+  ros::init(argc, argv, "show_mono_frame");
   ros::NodeHandle nh;
-  cv::namedWindow("view");
+  cv::namedWindow("show_mono_frame");
   // cv::startWindowThread();
   image_transport::ImageTransport it(nh);
   image_transport::Subscriber sub = it.subscribe("frame_chatter", 1, imageCallback);
   ros::spin();
-  cv::destroyWindow("view");
+  cv::destroyWindow("show_mono_frame");
 }

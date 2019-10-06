@@ -6,11 +6,12 @@
 
 int main(int argc, char** argv)
 {
-  ROS_INFO("talker_frame_cpp start...");
+  ROS_INFO("mono_vision_cpp start...");
   // Check if video source has been passed as a parameter
-  if(argv[1] == NULL) return 1;
+  if(argv[1] == NULL) 
+    return 1;
 
-  ros::init(argc, argv, "talker_frame_cpp");
+  ros::init(argc, argv, "mono_vision_cpp");
   ros::NodeHandle nh;
   image_transport::ImageTransport it(nh);
   image_transport::Publisher pub = it.advertise("frame_chatter", 1);
@@ -19,20 +20,24 @@ int main(int argc, char** argv)
   std::istringstream video_sourceCmd(argv[1]);
   int video_source;
   // Check if it is indeed a number
-  if(!(video_sourceCmd >> video_source)) return 1;
+  if(!(video_sourceCmd >> video_source)) 
+    return 1;
 
   cv::VideoCapture cap(video_source);
   // Check if video device can be opened with the given index
-  if(!cap.isOpened()) return 1;
-  cv::Mat frame;
+  if(!cap.isOpened()) 
+    return 1;
+  cv::Mat input_frame;
+  cv::Mat ping_frame, pong_frame;
   sensor_msgs::ImagePtr msg;
 
   ros::Rate loop_rate(5);
   while (nh.ok()) {
-    cap >> frame;
+    cap >> input_frame;  
     // Check if grabbed frame is actually full with some content
-    if(!frame.empty()) {
-      msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+    if(!input_frame.empty()) {
+      cv::cvtColor(input_frame, ping_frame, CV_BGR2GRAY);
+      msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", ping_frame).toImageMsg();
       pub.publish(msg);
       cv::waitKey(1);
     }
