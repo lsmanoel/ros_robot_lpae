@@ -118,21 +118,25 @@ catkin_package(
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(show_mono_frame src/show_mono_frame.cpp)
-target_link_libraries(show_mono_frame ${catkin_LIBRARIES})
-target_link_libraries(show_mono_frame ${OpenCV_LIBRARIES})
+add_executable(mono_display_mono8 src/mono_display_mono8.cpp)
+target_link_libraries(mono_display_mono8 ${catkin_LIBRARIES})
+target_link_libraries(mono_display_mono8 ${OpenCV_LIBRARIES})
 
-add_executable(mono_vision src/mono_vision.cpp)
-target_link_libraries(mono_vision ${catkin_LIBRARIES})
-target_link_libraries(mono_vision ${OpenCV_LIBRARIES})
+add_executable(mono_vision_mono8 src/mono_vision_mono8.cpp)
+target_link_libraries(mono_vision_mono8 ${catkin_LIBRARIES})
+target_link_libraries(mono_vision_mono8 ${OpenCV_LIBRARIES})
 
-add_executable(stereo_vision src/stereo_vision.cpp)
-target_link_libraries(stereo_vision ${catkin_LIBRARIES})
-target_link_libraries(stereo_vision ${OpenCV_LIBRARIES})
+add_executable(mono_display_bgr8 src/mono_display_bgr8.cpp)
+target_link_libraries(mono_display_bgr8 ${catkin_LIBRARIES})
+target_link_libraries(mono_display_bgr8 ${OpenCV_LIBRARIES})
 
-add_executable(pitch_stabilizer src/pitch_stabilizer.cpp)
-target_link_libraries(pitch_stabilizer ${catkin_LIBRARIES})
-target_link_libraries(pitch_stabilizer ${OpenCV_LIBRARIES})
+add_executable(mono_vision_bgr8 src/mono_vision_bgr8.cpp)
+target_link_libraries(mono_vision_bgr8 ${catkin_LIBRARIES})
+target_link_libraries(mono_vision_bgr8 ${OpenCV_LIBRARIES})
+
+add_executable(stereo_vision_mono8 src/stereo_vision_mono8.cpp)
+target_link_libraries(stereo_vision_mono8 ${catkin_LIBRARIES})
+target_link_libraries(stereo_vision_mono8 ${OpenCV_LIBRARIES})
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations

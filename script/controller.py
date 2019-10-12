@@ -7,7 +7,7 @@ from std_msgs.msg import Bool
 class Controller(object):
     """docstring for Controller"""
     def __init__(self):
-        rospy.init_node('Controller', anonymous=True)
+        rospy.init_node('controller_py', anonymous=True)
 
         self.rate = rospy.Rate(127)#Hz
 

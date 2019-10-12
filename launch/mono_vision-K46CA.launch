@@ -1,5 +1,6 @@
 <launch>
-	<node pkg="rosserial_python" type="serial_node.py" name="controle_acc" output="screen">
+	<node name="" pkg="ros_robot_lpae" type="mono_display" />
+	<node name="steering_wheel" pkg="rosserial_python" type="serial_node.py" output="screen">
 		<param name="port" value="/dev/ttyACM0"/>
 		<param name="baud" value="57600"/>
 	</node>
