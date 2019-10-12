@@ -130,6 +130,10 @@ add_executable(stereo_vision src/stereo_vision.cpp)
 target_link_libraries(stereo_vision ${catkin_LIBRARIES})
 target_link_libraries(stereo_vision ${OpenCV_LIBRARIES})
 
+add_executable(pitch_stabilizer src/pitch_stabilizer.cpp)
+target_link_libraries(pitch_stabilizer ${catkin_LIBRARIES})
+target_link_libraries(pitch_stabilizer ${OpenCV_LIBRARIES})
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
