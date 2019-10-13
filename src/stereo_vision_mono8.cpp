@@ -49,10 +49,10 @@ int main(int argc, char** argv)
     if(!video_R_capture.isOpened()) 
         return 1;
 
-    video_L_capture.set(CV_CAP_PROP_FRAME_WIDTH, FULL_FRAME_WIDTH);
-    video_L_capture.set(CV_CAP_PROP_FRAME_HEIGHT, FULL_FRAME_HEIGHT);
-    video_R_capture.set(CV_CAP_PROP_FRAME_WIDTH, FULL_FRAME_WIDTH);
-    video_R_capture.set(CV_CAP_PROP_FRAME_HEIGHT, FULL_FRAME_HEIGHT);
+    video_L_capture.set(0, FULL_FRAME_WIDTH);
+    video_L_capture.set(1, FULL_FRAME_HEIGHT);
+    video_R_capture.set(0, FULL_FRAME_WIDTH);
+    video_R_capture.set(1, FULL_FRAME_HEIGHT);
 
     cv::Mat input_L_frame, input_R_frame;
     cv::Mat ping_frame, pong_frame;
