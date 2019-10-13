@@ -1,4 +1,4 @@
 <launch>
-	<machine name="lucas-rasp" address="lucas-rasp.local" user="lucas" password="alphabeta"/>
-		<node name="" pkg="ros_robot_lpae" type="controller.py" />	
+	<machine name="lucas-rasp" address="192.168.0.45" user="lucas" password="alphabeta"/>
+	<node machine="lucas-rasp" name="" pkg="ros_robot_lpae" type="controller.py" />
 </launch>
