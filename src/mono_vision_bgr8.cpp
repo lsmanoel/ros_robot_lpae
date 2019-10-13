@@ -17,23 +17,27 @@ int main(int argc, char** argv)
   // Check if video source has been passed as a parameter
   if(argv[1] == NULL) 
     return 1;
+  ROS_INFO("...");
   // Convert the passed as command line parameter index for the video device to an integer
   std::istringstream video_sourceCmd(argv[1]);
   int video_source;
   // Check if it is indeed a number
   if(!(video_sourceCmd >> video_source)) 
     return 1;
+  ROS_INFO("...");
   cv::VideoCapture cap(video_source);
   // Check if video device can be opened with the given index
   if(!cap.isOpened()) 
     return 1;
+  ROS_INFO("...");
   // Configure the camera resolution
-  cap.set(1, FULL_FRAME_WIDTH);
-  cap.set(2, FULL_FRAME_HEIGHT);
+  cap.set(CV_CAP_PROP_FRAME_WIDTH, FULL_FRAME_WIDTH);
+  cap.set(CV_CAP_PROP_FRAME_HEIGHT, FULL_FRAME_HEIGHT);
 
   int rot_angle;
   if(argv[2] == NULL) 
     return 1;
+  ROS_INFO("...");
   std::istringstream rot_angleCmd(argv[2]);
   if(!(rot_angleCmd >> rot_angle)) 
     return 1;

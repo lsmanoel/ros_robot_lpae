@@ -28,7 +28,7 @@ def chatter_callback(frame):
  
 def mono_display():
     rospy.init_node('mono_display', anonymous=True)
-    rospy.Subscriber('mono_vision_raw_bgr8', Image, chatter_callback)
+    rospy.Subscriber('mono_vision', Image, chatter_callback)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()

@@ -44,8 +44,11 @@ class RcnnInceptionV2(object):
         COLORS = [np.array(c.split(",")).astype("int") for c in COLORS]
         self.colors = np.array(COLORS, dtype="uint8")
 
-    def signals_subscriber_init(self):
-        rospy.Subscriber("mono_vision_raw_bgr8", Image, self.input_frame_callback)
+    def signals_publisher_init(self, rostopic_name="mono_vision"):
+        self.pub_output = rospy.Publisher(rostopic_name, Image, queue_size=10)
+
+    def signals_subscriber_init(self, rostopic_name="mono_vision_bgr8"):
+        rospy.Subscriber(rostopic_name, Image, self.input_frame_callback)
 
     def input_frame_callback(self, frame):
         self.input_frame = self.bridge.imgmsg_to_cv2(frame)
@@ -158,16 +161,16 @@ class RcnnInceptionV2(object):
 
                 # show the output image
                 frameCopy = cv2.cvtColor(frameCopy, cv2.COLOR_BGR2RGB)
+                self.pub_output.publish(self.bridge.cv2_to_imgmsg(frameCopy))
+                #cv2.imshow("rcnn_inception_v2", frameCopy)
+                #cv2.waitKey(1)
 
-                cv2.imshow("rcnn_inception_v2", frameCopy)
-                cv2.waitKey(1)
-
-
-        cv2.destroyAllWindows() 
+        # cv2.destroyAllWindows() 
 
 # ======================================================================================================================
 def rcnn_inception_v2():
     rcnn_inception_v2 = RcnnInceptionV2()
+    rcnn_inception_v2.signals_publisher_init()
     rcnn_inception_v2.signals_subscriber_init()
     rcnn_inception_v2.main_loop()
 
