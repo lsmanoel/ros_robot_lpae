@@ -122,21 +122,21 @@ add_executable(mono_display_mono8 src/mono_display_mono8.cpp)
 target_link_libraries(mono_display_mono8 ${catkin_LIBRARIES})
 target_link_libraries(mono_display_mono8 ${OpenCV_LIBRARIES})
 
-add_executable(mono_vision_mono8 src/mono_vision_mono8.cpp)
-target_link_libraries(mono_vision_mono8 ${catkin_LIBRARIES})
-target_link_libraries(mono_vision_mono8 ${OpenCV_LIBRARIES})
-
 add_executable(mono_display_bgr8 src/mono_display_bgr8.cpp)
 target_link_libraries(mono_display_bgr8 ${catkin_LIBRARIES})
 target_link_libraries(mono_display_bgr8 ${OpenCV_LIBRARIES})
 
-add_executable(mono_vision_bgr8 src/mono_vision_bgr8.cpp)
-target_link_libraries(mono_vision_bgr8 ${catkin_LIBRARIES})
-target_link_libraries(mono_vision_bgr8 ${OpenCV_LIBRARIES})
+add_executable(mono_vision_mono8 src/mono_vision_mono8.cpp)
+target_link_libraries(mono_vision_mono8 ${catkin_LIBRARIES})
+target_link_libraries(mono_vision_mono8 ${OpenCV_LIBRARIES})
 
-add_executable(stereo_vision_mono8 src/stereo_vision_mono8.cpp)
-target_link_libraries(stereo_vision_mono8 ${catkin_LIBRARIES})
-target_link_libraries(stereo_vision_mono8 ${OpenCV_LIBRARIES})
+# add_executable(mono_vision_bgr8 src/mono_vision_bgr8.cpp)
+# target_link_libraries(mono_vision_bgr8 ${catkin_LIBRARIES})
+# target_link_libraries(mono_vision_bgr8 ${OpenCV_LIBRARIES})
+
+# add_executable(stereo_vision_mono8 src/stereo_vision_mono8.cpp)
+# target_link_libraries(stereo_vision_mono8 ${catkin_LIBRARIES})
+# target_link_libraries(stereo_vision_mono8 ${OpenCV_LIBRARIES})
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
