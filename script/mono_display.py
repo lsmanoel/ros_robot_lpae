@@ -1,10 +1,16 @@
 #!/usr/bin/env python
+import sys
 import roslib
 import cv2
 import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+
+# ap = argparse.ArgumentParser()
+# ap.add_argument('-i', '--input_topic', required=True,
+# 	help='name of the user')
+# args = vars(ap.parse_args())
 
 bridge = CvBridge()
 
@@ -28,8 +34,8 @@ def chatter_callback(frame):
  
 def mono_display():
     rospy.init_node('mono_display', anonymous=True)
-    rospy.Subscriber('mono_vision_mono8', Image, chatter_callback)
-
+    rospy.Subscriber(sys.argv[1], Image, chatter_callback)
+    # rospy.Subscriber('mono_vision_mono8', Image, chatter_callback)
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 

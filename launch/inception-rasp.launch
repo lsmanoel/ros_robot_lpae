@@ -1,6 +1,4 @@
 <launch>
-	<node pkg="rosserial_python" type="serial_node.py" name="controle_acc" output="screen">
-		<param name="port" value="/dev/ttyACM0"/>
-		<param name="baud" value="57600"/>
-	</node>
+	<machine name="lucas-rasp" address="lucas-rasp.local" user="lucas" password="alphabeta"/>
+		<node name="" pkg="ros_robot_lpae" type="controller.py" />	
 </launch>

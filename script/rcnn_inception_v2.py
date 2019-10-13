@@ -44,7 +44,7 @@ class RcnnInceptionV2(object):
         COLORS = [np.array(c.split(",")).astype("int") for c in COLORS]
         self.colors = np.array(COLORS, dtype="uint8")
 
-    def signals_publisher_init(self, rostopic_name="mono_vision"):
+    def signals_publisher_init(self, rostopic_name="rcnn_inception_v2"):
         self.pub_output = rospy.Publisher(rostopic_name, Image, queue_size=10)
 
     def signals_subscriber_init(self, rostopic_name="mono_vision_bgr8"):
