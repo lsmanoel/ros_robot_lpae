@@ -72,8 +72,8 @@ class Controller(object):
             else:
                 self.driver_R = 0
 
-            self.pub_driver_L.publish(int(self.driver_L))
-            self.pub_driver_R.publish(int(self.driver_R))
+            self.pub_motor_power_L.publish(int(self.driver_L))
+            self.pub_motor_power_R.publish(int(self.driver_R))
 
             print(self.driver_L, self.driver_R)
 
