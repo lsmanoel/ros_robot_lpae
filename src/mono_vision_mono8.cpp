@@ -28,8 +28,8 @@ int main(int argc, char** argv)
   if(!cap.isOpened()) 
     return 1;
   // Configure the camera resolution
-  cap.set(CV_CAP_PROP_FRAME_WIDTH, FULL_FRAME_WIDTH);
-  cap.set(CV_CAP_PROP_FRAME_HEIGHT, FULL_FRAME_HEIGHT);
+  cap.set(1, FULL_FRAME_WIDTH);
+  cap.set(2, FULL_FRAME_HEIGHT);
 
   int rot_angle;
   if(argv[2] == NULL) 
