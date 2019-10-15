@@ -66,24 +66,24 @@ class Controller(object):
             if self.power_on_L is True:
                 if self.driver_L < self.power_ref + self.power_dif:
                     self.driver_L += 1
-                    if self.driver_L > 127:
-                        self.driver_L = 127
+                    if self.driver_L > 126:
+                        self.driver_L = 126
                 if self.driver_L > self.power_ref + self.power_dif:
                     self.driver_L -= 1
-                    if self.driver_L < -127:
-                        self.driver_L = -127
+                    if self.driver_L < -126:
+                        self.driver_L = -126
             else:
                 self.driver_L = 0
 
             if self.power_on_R is True:
                 if self.driver_R < self.power_ref - self.power_dif:
                     self.driver_R += 1
-                    if self.driver_R > 127:
-                        self.driver_R = 127
+                    if self.driver_R > 126:
+                        self.driver_R = 126
                 if self.driver_R > self.power_ref - self.power_dif:
                     self.driver_R -= 1
-                    if self.driver_R < -127:
-                        self.driver_R = -127
+                    if self.driver_R < -126:
+                        self.driver_R = -126
             else:
                 self.driver_R = 0
 
