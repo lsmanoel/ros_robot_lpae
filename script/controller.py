@@ -13,10 +13,15 @@ class Controller(object):
         self.rate = rospy.Rate(40)#Hz
 
         self.ctrl = 0
-        self.power_ref = 0
-        self.power_dif = 0
-        self.power_on_L = False
-        self.power_on_R = False
+        self.power_ref_ctrl = 0
+        self.power_dif_ctrl = 0
+        
+        self.svm = 0
+        self.power_ref_svm = 0
+        self.power_dif_svm = 0
+
+        self.power_on_L = True
+        self.power_on_R = True
 
         self.driver_L = 0
         self.driver_R = 0
@@ -27,52 +32,48 @@ class Controller(object):
 
     def signals_subscriber_init(self):
         rospy.Subscriber("ctrl", Int8, self.ctrl_callback)
-        rospy.Subscriber("power_ref", Int8, self.power_ref_callback)
-        rospy.Subscriber("power_dif", Int8, self.power_dif_callback)    
-        rospy.Subscriber("svm_ifsc_detector_loc", Point32, self.svm_ifsc_detector_loc_callback)
+        rospy.Subscriber("power_ref_ctrl", Int8, self.power_ref_ctrl_callback)
+        rospy.Subscriber("power_dif_ctrl", Int8, self.power_dif_ctrl_callback)  
+
+        rospy.Subscriber("svm", Int8, self.svm_callback)
+        rospy.Subscriber("svm_ref_ctrl", Int8, self.power_ref_svm_callback)
+        rospy.Subscriber("svm_dif_ctrl", Int8, self.power_dif_svm_callback) 
 
     def ctrl_callback(self, message):
         self.ctrl = message.data
 
-    def power_ref_callback(self, message):
-        if self.ctrl == 1 or self.ctrl == 12:
-            self.power_dif = 0
-            self.power_on_L = True
-            self.power_on_R = True
-            self.power_ref = message.data
+    def power_ref_ctrl_callback(self, message):
+        self.power_ref_ctrl = message.data
 
-        elif self.ctrl == 3:
-            self.power_on_L = True
-            self.power_on_R = True
-            self.power_ref = message.data
+    def power_dif_ctrl_callback(self, message):
+        self.power_dif_ctrl = message.data
 
-    def power_dif_callback(self, message):
-        if self.ctrl == 3:
-            self.power_on_L = True
-            self.power_on_R = True
-            self.power_dif = message.data
-        elif self.ctrl == 2 or self.ctrl == 4 or self.ctrl == 8:
-            self.power_ref = 0
-            self.power_on_L = True
-            self.power_on_R = True
-            self.power_dif = message.data
+    def svm_callback(self, message):
+        self.svm = message.data
 
-    def svm_ifsc_detector_loc_callback(self, message):
-        if self.ctrl == 0:
-            self.power_on_L = True
-            self.power_on_R = True
-            self.power_dif = (message.x-320)//4
-            self.power_ref = (message.x-240)//4
+    def power_ref_svm_callback(self, message):
+        self.power_ref_svm = message.data
+
+    def power_dif_svm_callback(self, message):
+        self.power_dif_svm = message.data
 
     def main_loop(self):
         self.signals_subscriber_init()
         self.signals_publisher_init()
 
         while not rospy.is_shutdown():
-            self.power_on_L = False
-            self.power_on_R = False
-
             self.rate.sleep() 
+
+            self.power_ref = 0 
+            self.power_dif = 0
+
+            if self.svm > 0:
+                self.power_ref = self.power_ref_svm
+                self.power_dif = self.power_dif_svm                   
+
+            if self.ctrl > 0:
+                self.power_ref = self.power_ref_ctrl
+                self.power_dif = self.power_dif_ctrl           
 
             if self.power_on_L is True:
                 if self.driver_L < self.power_ref + self.power_dif:
@@ -83,8 +84,9 @@ class Controller(object):
                     self.driver_L -= 1
                     if self.driver_L < -126:
                         self.driver_L = -126
-#            else:
-#                self.driver_L = 0
+            else:
+                self.power_ref = 0
+                self.power_dif = 0
 
             if self.power_on_R is True:
                 if self.driver_R < self.power_ref - self.power_dif:
@@ -95,8 +97,9 @@ class Controller(object):
                     self.driver_R -= 1
                     if self.driver_R < -126:
                         self.driver_R = -126
-#            else:
-#                self.driver_R = 0
+            else:
+                self.power_ref = 0
+                self.power_dif = 0
 
             self.pub_motor_power_L.publish(int(self.driver_L))
             self.pub_motor_power_R.publish(int(self.driver_R))

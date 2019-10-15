@@ -22,8 +22,8 @@ int8_t B_CTRL;
 ros::NodeHandle  nh;	
 std_msgs::Int8 power_ref, power_dif, ctrl;
 
-ros::Publisher pub_power_ref("power_ref", &power_ref);
-ros::Publisher pub_power_dif("power_dif", &power_dif);
+ros::Publisher pub_power_ref("power_ref_ctrl", &power_ref);
+ros::Publisher pub_power_dif("power_dif_ctrl", &power_dif);
 ros::Publisher pub_ctrl("ctrl", &ctrl);
 //---------------------------------------
 void setup()
