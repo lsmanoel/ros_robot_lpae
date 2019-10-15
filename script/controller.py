@@ -35,13 +35,24 @@ class Controller(object):
         self.ctrl = message.data
 
     def power_ref_callback(self, message):
-        if self.ctrl == 1 or self.ctrl == 3:
+        if self.ctrl == 1 or self.ctrl == 12:
+            self.power_dif = 0
+            self.power_on_L = True
+            self.power_on_R = True
+            self.power_ref = message.data
+
+        elif self.ctrl == 3:
             self.power_on_L = True
             self.power_on_R = True
             self.power_ref = message.data
 
     def power_dif_callback(self, message):
-        if self.ctrl == 2 or self.ctrl == 3 or self.ctrl == 4 or self.ctrl == 8:
+        if self.ctrl == 3:
+            self.power_on_L = True
+            self.power_on_R = True
+            self.power_dif = message.data
+        elif self.ctrl == 2 or self.ctrl == 4 or self.ctrl == 8:
+            self.power_ref = 0
             self.power_on_L = True
             self.power_on_R = True
             self.power_dif = message.data
