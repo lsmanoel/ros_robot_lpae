@@ -54,10 +54,12 @@ class RcnnInceptionV2(object):
         self.input_frame = self.bridge.imgmsg_to_cv2(frame)
 
     def main_loop(self):
+        # ------------------------------------------
         while not rospy.is_shutdown():
             self.rate.sleep()
             if self.input_frame is not None:
                 frame = self.input_frame.copy()
+                # -----------------------------------
                 (H, W) = frame.shape[:2]
                 
                 blob = cv2.dnn.blobFromImage(frame, swapRB=True, crop=False)
@@ -159,13 +161,11 @@ class RcnnInceptionV2(object):
                         cv2.putText(frameCopy, text, (startX, startY - 5),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-                # show the output image
+                # -----------------------------------
                 frameCopy = cv2.cvtColor(frameCopy, cv2.COLOR_BGR2RGB)
                 self.pub_output.publish(self.bridge.cv2_to_imgmsg(frameCopy))
-                #cv2.imshow("rcnn_inception_v2", frameCopy)
-                #cv2.waitKey(1)
-
-        # cv2.destroyAllWindows() 
+        
+        print("break")
 
 # ======================================================================================================================
 def rcnn_inception_v2():

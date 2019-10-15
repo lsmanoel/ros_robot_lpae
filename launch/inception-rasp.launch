@@ -1,4 +1,8 @@
 <launch>
-	<machine name="lucas-rasp" address="192.168.0.45" user="lucas" password="alphabeta"/>
-	<node machine="lucas-rasp" name="" pkg="ros_robot_lpae" type="controller.py" />
+	<node name="mono_vision_bgr8" pkg="ros_robot_lpae" type="mono_vision_bgr8" args="0 0"/>
+	<node name="controller" pkg="ros_robot_lpae" type="controller.py" />
+	<node name="driver_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+		<param name="port" value="/dev/ttyACM0"/>
+		<param name="baud" value="57600"/>
+	</node>
 </launch>

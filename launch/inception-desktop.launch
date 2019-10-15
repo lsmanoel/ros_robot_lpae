@@ -1,0 +1,5 @@
+<launch>
+	<node name="mono_vision_bgr8" pkg="ros_robot_lpae" type="mono_vision_bgr8" args="0 0"/>
+	<node name="rcnn_inception_v2" pkg="ros_robot_lpae" type="rcnn_inception_v2.py"/>
+	<node name="mono_display" pkg="ros_robot_lpae" type="mono_display.py" args="rcnn_inception_v2"/>	
+</launch>
