@@ -10,7 +10,6 @@ from std_msgs.msg import Bool
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-import matplotlib.pyplot as plt
 
 class PingPongDelayTester(object):
     """docstring for ping_pong_delay_tester"""
@@ -170,6 +169,7 @@ class PingPongDelayTester(object):
             rospy.spin()
 
         elif self.mode == 'plotter':
+            import matplotlib.pyplot as plt
             rospy.wait_for_service('ping_pong_time_ping_pong_data_service')
             ping_pong_time_ping_pong_data_service = rospy.ServiceProxy('ping_pong_time_ping_pong_data_service', return_data)
             ping_pong_time = ping_pong_time_ping_pong_data_service()
