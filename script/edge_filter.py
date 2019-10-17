@@ -31,7 +31,7 @@ class EdgeFilter(object):
 		else: 
 			self.output_topic = output_topic
 
-        rospy.init_node('rcnn_inception_v2', anonymous=True)
+        rospy.init_node(self.name, anonymous=True)
 
         self.rate = rospy.Rate(30)#Hz
 
