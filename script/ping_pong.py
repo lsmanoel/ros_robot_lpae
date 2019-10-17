@@ -11,10 +11,10 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
-class PingPongDelayTester(object):
-    """docstring for ping_pong_delay_tester"""
+class PingPong(object):
+    """docstring for ping_pong"""
     def __init__(self, 
-                 name='ping_pong_delay_tester', 
+                 name='ping_pong', 
                  mode='ping_pong', 
                  imshow_on=None):
 
@@ -192,7 +192,7 @@ class PingPongDelayTester(object):
         cv2.destroyAllWindows()
 
 # ======================================================================================================================
-def ping_pong_delay_tester():   
+def ping_pong():   
     mode = None
     imshow_on = []
 
@@ -204,16 +204,16 @@ def ping_pong_delay_tester():
                 imshow_on.append(argv)
 
     if mode == 'plotter':
-        plotter = PingPongDelayTester(name = 'plotter', mode='plotter', imshow_on=imshow_on)
+        plotter = PingPong(name = 'plotter', mode='plotter', imshow_on=imshow_on)
         plotter.main_loop()
     elif mode == 'bypass':
-        bypass = PingPongDelayTester(name='bypass', mode='bypass', imshow_on=imshow_on)
+        bypass = PingPong(name='bypass', mode='bypass', imshow_on=imshow_on)
         bypass.signals_subscriber_init(topic='ping_pong_output', callback=bypass.bypass_image_callback)
         bypass.signals_publisher_init()
         bypass.time_bypass_data_service_init()
         bypass.main_loop()
     else:  
-        ping_pong = PingPongDelayTester(name='ping_pong', mode=mode, imshow_on=imshow_on)
+        ping_pong = PingPong(name='ping_pong', mode=mode, imshow_on=imshow_on)
         ping_pong.signals_subscriber_init(topic='bypass_output', callback=ping_pong.pong_image_callback)
         ping_pong.signals_publisher_init()
         ping_pong.time_ping_data_service_init()
@@ -223,6 +223,6 @@ def ping_pong_delay_tester():
 
 if __name__ == '__main__':
     try:
-        ping_pong_delay_tester()
+        ping_pong()
     except rospy.ROSInterruptException:
         pass

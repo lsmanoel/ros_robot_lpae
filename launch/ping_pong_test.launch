@@ -1,4 +1,4 @@
 <launch>
-	<node name="bypass" pkg="ros_robot_lpae" type="ping_pong_delay_tester.py" args="bypass"/>
-	<node name="ping_pong" pkg="ros_robot_lpae" type="ping_pong_delay_tester.py" args="ping_pong"/>
+	<node name="bypass" pkg="ros_robot_lpae" type="ping_pong.py" args="bypass"/>
+	<node name="ping_pong" pkg="ros_robot_lpae" type="ping_pong.py" args="ping_pong"/>
 </launch>
