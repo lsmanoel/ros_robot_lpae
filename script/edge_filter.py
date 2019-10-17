@@ -59,9 +59,9 @@ class EdgeFilter(object):
             if self.input_frame is not None:
                 frame = self.input_frame.copy()
                 # -----------------------------------
-
+                frame = cv2.Canny(frame,100,200)
                 # -----------------------------------
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.output_frame = frame.copy()
                 self.pub_output.publish(self.bridge.cv2_to_imgmsg(self.output_frame))
         
@@ -69,7 +69,7 @@ class EdgeFilter(object):
 
 # ======================================================================================================================
 def edge_filter():
-    edge_filter = EdgeFilter(input_topic="/webcam/image_raw/compressed")
+    edge_filter = EdgeFilter(input_topic="/webcam/image_raw")
     edge_filter.signals_publisher_init()
     edge_filter.signals_subscriber_init()
     edge_filter.main_loop()
