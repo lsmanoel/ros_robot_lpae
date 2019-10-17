@@ -69,7 +69,7 @@ class EdgeFilter(object):
 
 # ======================================================================================================================
 def edge_filter():
-    edge_filter = EdgeFilter(input_topic="/webcam/image_raw")
+    edge_filter = EdgeFilter(input_topic="/webcam/image_raw/compressed")
     edge_filter.signals_publisher_init()
     edge_filter.signals_subscriber_init()
     edge_filter.main_loop()
