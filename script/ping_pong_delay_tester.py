@@ -194,7 +194,7 @@ class PingPongDelayTester(object):
 # ======================================================================================================================
 def ping_pong_delay_tester():   
     mode = None
-    imshow_on = None
+    imshow_on = []
 
     if len(sys.argv)>=2:
         mode = sys.argv[1]
