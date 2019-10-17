@@ -60,10 +60,15 @@ class Controller(object):
     def main_loop(self):
         self.signals_subscriber_init()
         self.signals_publisher_init()
-
+        
+        tn1 = rospy.get_rostime()
         while not rospy.is_shutdown():
             self.rate.sleep() 
-
+            t0 = rospy.get_rostime()
+            dt = t0.nsecs - tn1.nsecs              
+            print('t0:', t0.secs, t0.nsecs, 'dt:',  dt)
+            tn1 = t0
+            
             self.power_ref = 0 
             self.power_dif = 0
 
@@ -104,7 +109,7 @@ class Controller(object):
             self.pub_motor_power_L.publish(int(self.driver_L))
             self.pub_motor_power_R.publish(int(self.driver_R))
 
-            print(self.power_on_L, self.driver_L, self.driver_R, self.power_on_R)
+            # print(self.power_on_L, self.driver_L, self.driver_R, self.power_on_R)
 
 
 # ======================================================================================================================

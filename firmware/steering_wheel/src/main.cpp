@@ -64,27 +64,33 @@ void loop()
 
     power_ref.data = ACCEL_XOUT_H;
     power_dif.data = ACCEL_YOUT_H;
-
+    
+    power_ref.data = 0;
+    power_dif.data = 0;
+    
     B_CTRL = 0x00;
     if(digitalRead(L1)==LOW){
         B_CTRL = 0b00000001;
-        pub_power_ref.publish(&power_ref);
+        power_ref.data = 2*ACCEL_XOUT_H;
     }
     if(digitalRead(R1)==LOW){
         B_CTRL |= 0b00000010;
-        pub_power_dif.publish(&power_dif);
+        power_dif.data = 2*ACCEL_YOUT_H;
     }   
     if(digitalRead(L2)==LOW){
         B_CTRL |= 0b00000100;
+        power_ref.data = 0;
         power_dif.data = -125;
-        pub_power_dif.publish(&power_dif);
     }
     if(digitalRead(R2)==LOW){
         B_CTRL |= 0b00001000;
+        power_ref.data = 0;
         power_dif.data = 125;
-        pub_power_dif.publish(&power_dif);
     }
     ctrl.data = B_CTRL;
+
+    pub_power_ref.publish(&power_ref);
+    pub_power_dif.publish(&power_dif);
     pub_ctrl.publish(&ctrl); 
 
     //---------------------------------------

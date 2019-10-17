@@ -93,7 +93,7 @@ void loop()
         if(spin_R)
           PORTC = 0b00101101;
         else
-          PORTC = 0b00111011;
+          PORTC = 0b00011011;
 
       //---------------------------------------
       if(i > dutycycle_R)
@@ -102,7 +102,7 @@ void loop()
         if(spin_L)
           PORTB = 0b00101101;
         else
-          PORTB = 0b00111011;
+          PORTB = 0b00011011;
 
       //---------------------------------------
       nh.spinOnce(); 

@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     return 1;
   // Configure the camera resolution
   cap.set(0, FULL_FRAME_WIDTH);
-  /cap.set(1, FULL_FRAME_HEIGHT);
+  cap.set(1, FULL_FRAME_HEIGHT);
 
   int rot_angle;
   if(argv[2] == NULL) 
