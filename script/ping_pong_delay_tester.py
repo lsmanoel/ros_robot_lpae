@@ -14,12 +14,18 @@ import matplotlib.pyplot as plt
 
 class PingPongDelayTester(object):
     """docstring for ping_pong_delay_tester"""
-    def __init__(self, name='ping_pong_delay_tester', mode='ping_pong'):
+    def __init__(self, 
+                 name='ping_pong_delay_tester', 
+                 mode='ping_pong', 
+                 imshow_on=None):
+
         rospy.init_node(name, anonymous=True)
         self.name = name
         self.bridge = CvBridge()
+        self.pub = None
 
         self.mode = mode
+        self.imshow_on = imshow_on
 
         self.time_ping_buffer_size = 1000
         self._time_ping = []
@@ -29,6 +35,10 @@ class PingPongDelayTester(object):
         self._time_pong = []
         self.time_pong = 0
 
+        self.time_ping_pong_buffer_size = 1000
+        self._time_ping_pong = []
+        self.time_ping_pong = 0
+
         self.time_bypass_buffer_size = 1000
         self._time_bypass = []
         self.time_bypass = 0
@@ -37,12 +47,13 @@ class PingPongDelayTester(object):
         self.output_frame = None
         
     @staticmethod
-    def imshow(frame=None, name='frame'):
+    def imshow(frame=None, name='frame', waitKey=40):
         if frame is not None:
             cv2.imshow(name, frame)
-            cv2.waitKey(5)
+            cv2.waitKey(waitKey)
 
     # ----------------------------------------------------------------------------------------
+    
     @property
     def time_ping(self):
         return self._time_ping[-1]
@@ -62,6 +73,16 @@ class PingPongDelayTester(object):
         if len(self._time_pong) > self.time_pong_buffer_size:
             self._time_pong.remove(0)
         self._time_pong.append(value)
+
+    @property
+    def time_ping_pong(self):
+        return self._time_ping_pong[-1]
+
+    @time_ping_pong.setter
+    def time_ping_pong(self, value):
+        if len(self._time_ping_pong) > self.time_ping_pong_buffer_size:
+            self._time_ping_pong.remove(0)
+        self._time_ping_pong.append(value)
 
     @property
     def time_bypass(self):
@@ -87,6 +108,12 @@ class PingPongDelayTester(object):
     def time_pong_data_service(self, msg):
         return return_dataResponse(self._time_pong)
 
+    def time_ping_pong_data_service_init(self):
+        self._time_ping_pong_data_service = rospy.Service(self.name + '_time_ping_pong_data_service', return_data, self.time_ping_pong_data_service)
+
+    def time_ping_pong_data_service(self, msg):
+        return return_dataResponse(self._time_ping_pong)
+
     def time_bypass_data_service_init(self):
         self._time_pong_data_service = rospy.Service(self.name + '_time_bypass_data_service', return_data, self.time_bypass_data_service)
 
@@ -99,12 +126,19 @@ class PingPongDelayTester(object):
         frame = self.bridge.imgmsg_to_cv2(frame)
         self.time_bypass = rospy.get_rostime().nsecs
         self.pub.publish(self.bridge.cv2_to_imgmsg(frame))
-        # self.imshow(frame, name="bypass_frame")
+        if 'bypass_frame' in self.imshow_on:
+            self.imshow(frame, name='bypass_frame')
 
     def pong_image_callback(self, frame):
-        self.input_frame = self.bridge.imgmsg_to_cv2(frame)
+        input_frame = self.bridge.imgmsg_to_cv2(frame)
         self.time_pong = rospy.get_rostime().nsecs
-        # self.imshow(self.input_frame, name="pong_frame")
+        self.time_ping_pong = self.time_pong - self.time_ping
+        if 'ping_frame' in self.imshow_on:
+            self.imshow(self.output_frame, name='ping_frame')
+        if 'pong_frame' in self.imshow_on:
+            self.imshow(input_frame, name='pong_frame')
+
+        self.input_frame = input_frame
 
     def signals_publisher_init(self, 
                                topic=None):
@@ -126,9 +160,8 @@ class PingPongDelayTester(object):
             if self.output_frame is not None:
                 self.pub.publish(self.bridge.cv2_to_imgmsg(self.output_frame))
                 self.time_ping = rospy.get_rostime().nsecs
-                # self.imshow(self.output_frame, name="pong_frame")
         else:
-            print("publisher output not started!")
+            print('publisher output not started!')
 
     # ----------------------------------------------------------------------------------------
     # Main Loop
@@ -137,11 +170,10 @@ class PingPongDelayTester(object):
             rospy.spin()
 
         elif self.mode == 'plotter':
-            rospy.wait_for_service('bypass_time_bypass_data_service')
-            bypass_time_bypass_data_service = rospy.ServiceProxy('bypass_time_bypass_data_service', return_data)
-            bypass_time = bypass_time_bypass_data_service()
-            #print(bypass_time.data)
-            plt.plot(bypass_time.data)
+            rospy.wait_for_service('ping_pong_time_ping_pong_data_service')
+            ping_pong_time_ping_pong_data_service = rospy.ServiceProxy('ping_pong_time_ping_pong_data_service', return_data)
+            ping_pong_time = ping_pong_time_ping_pong_data_service()
+            plt.plot(ping_pong_time.data)
             plt.show()
         else:
             self.rate = rospy.Rate(20)#Hz
@@ -155,33 +187,38 @@ class PingPongDelayTester(object):
                     self.ping_image()
 
                 break
-            video_capture.release()
-            cv2.destroyAllWindows()
+                
+        video_capture.release()
+        cv2.destroyAllWindows()
 
 # ======================================================================================================================
 def ping_pong_delay_tester():   
+    mode = None
+    imshow_on = None
+
     if len(sys.argv)>=2:
         mode = sys.argv[1]
         if len(sys.argv)>=3:
-            opition = sys.argv[2]
-    else:
-        mode = None
+            imshow_on = []
+            for argv in sys.argv[2:]: 
+                imshow_on.append(argv)
 
     if mode == 'plotter':
-        plotter = PingPongDelayTester(name = 'plotter', mode='plotter')
+        plotter = PingPongDelayTester(name = 'plotter', mode='plotter', imshow_on=imshow_on)
         plotter.main_loop()
     elif mode == 'bypass':
-        bypass = PingPongDelayTester(name='bypass', mode='bypass')
+        bypass = PingPongDelayTester(name='bypass', mode='bypass', imshow_on=imshow_on)
         bypass.signals_subscriber_init(topic='ping_pong_output', callback=bypass.bypass_image_callback)
         bypass.signals_publisher_init()
         bypass.time_bypass_data_service_init()
         bypass.main_loop()
     else:  
-        ping_pong = PingPongDelayTester(name='ping_pong', mode=mode)
+        ping_pong = PingPongDelayTester(name='ping_pong', mode=mode, imshow_on=imshow_on)
         ping_pong.signals_subscriber_init(topic='bypass_output', callback=ping_pong.pong_image_callback)
         ping_pong.signals_publisher_init()
         ping_pong.time_ping_data_service_init()
         ping_pong.time_pong_data_service_init()
+        ping_pong.time_ping_pong_data_service_init()
         ping_pong.main_loop()
 
 if __name__ == '__main__':
