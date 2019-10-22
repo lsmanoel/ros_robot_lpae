@@ -1,0 +1,17 @@
+ros_esteira_on_rasp.launch
+
+<launch>
+	<node name="controller" pkg="ros_robot_lpae" type="controller.py" />
+	<node name="driver_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+		<param name="port" value="/dev/ttyACM0"/>
+		<param name="baud" value="57600"/>
+	</node>
+</launch>
+
+<launch>
+	<node name="controller" pkg="ros_robot_lpae" type="controller.py" />
+	<node name="driver_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+		<param name="port" value="/dev/ttyACM0"/>
+		<param name="baud" value="57600"/>
+	</node>
+</launch>

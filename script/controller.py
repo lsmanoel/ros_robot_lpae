@@ -66,7 +66,7 @@ class Controller(object):
             self.rate.sleep() 
             t0 = rospy.get_rostime()
             dt = t0.nsecs - tn1.nsecs              
-            print('t0:', t0.secs, t0.nsecs, 'dt:',  dt)
+            #print('t0:', t0.secs, t0.nsecs, 'dt:',  dt)
             tn1 = t0
             
             self.power_ref = 0 
@@ -106,6 +106,7 @@ class Controller(object):
                 self.power_ref = 0
                 self.power_dif = 0
 
+            print(self.driver_L, self.driver_R)
             self.pub_motor_power_L.publish(int(self.driver_L))
             self.pub_motor_power_R.publish(int(self.driver_R))
 
