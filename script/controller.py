@@ -2,6 +2,7 @@
 from __future__ import print_function
 import rospy
 from std_msgs.msg import Int8
+from std_msgs.msg import UInt8
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Point32
 
@@ -26,6 +27,8 @@ class Controller(object):
         self.driver_L = 0
         self.driver_R = 0
 
+        self.stereo_vision_central_histogram = 0
+
     def signals_publisher_init(self):
         self.pub_motor_power_L = rospy.Publisher('motor_power_L', Int8, queue_size=10)
         self.pub_motor_power_R = rospy.Publisher('motor_power_R', Int8, queue_size=10)
@@ -37,7 +40,9 @@ class Controller(object):
 
         rospy.Subscriber("svm", Int8, self.svm_callback)
         rospy.Subscriber("svm_ref_ctrl", Int8, self.power_ref_svm_callback)
-        rospy.Subscriber("svm_dif_ctrl", Int8, self.power_dif_svm_callback) 
+        rospy.Subscriber("svm_dif_ctrl", Int8, self.power_dif_svm_callback)
+
+        rospy.Subscriber("stereo_vision_central_depth_histogram", UInt8, self.stereo_vision_central_histogram_callback) 
 
     def ctrl_callback(self, message):
         self.ctrl = message.data
@@ -56,6 +61,9 @@ class Controller(object):
 
     def power_dif_svm_callback(self, message):
         self.power_dif_svm = message.data
+
+    def stereo_vision_central_histogram_callback(self, message):
+        self.stereo_vision_central_histogram = message.data
 
     def main_loop(self):
         self.signals_subscriber_init()
@@ -103,6 +111,13 @@ class Controller(object):
                     if self.driver_R < -126:
                         self.driver_R = -126
             else:
+                self.power_ref = 0
+                self.power_dif = 0
+
+            print('stereo_vision_central_histogram:', self.stereo_vision_central_histogram)
+
+            if self.stereo_vision_central_histogram > 200:
+                print('break power!!!!')
                 self.power_ref = 0
                 self.power_dif = 0
 
