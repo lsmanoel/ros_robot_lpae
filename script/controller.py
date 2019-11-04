@@ -116,10 +116,10 @@ class Controller(object):
 
             print('stereo_vision_central_histogram:', self.stereo_vision_central_histogram)
 
-            if self.stereo_vision_central_histogram > 200:
+            if self.stereo_vision_central_histogram > 215:
                 print('break power!!!!')
-                self.power_ref = 0
-                self.power_dif = 0
+                self.driver_L = 0
+                self.driver_R = 0
 
             print(self.driver_L, self.driver_R)
             self.pub_motor_power_L.publish(int(self.driver_L))
