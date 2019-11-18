@@ -29,7 +29,7 @@ class RadialCLosedLoop(Controller):
             self.d_R = self.d_R_input
             self.d_C = self.d_C_input
             
-            d_dif = self.d_L - self.d_R
+            d_dif = 5*(self.d_L - self.d_R)
             dynamic_dutycycle = True
 
             self.power_L = 100
@@ -37,7 +37,7 @@ class RadialCLosedLoop(Controller):
 
             # -------------------------------------------------------------------------
             if dynamic_dutycycle is True:
-                self.power_L = d_dif + self.power_comp
+                self.power_L = - d_dif + self.power_comp
                 if self.power_L > 255:
                     self.power_L = 255
                 if self.power_L < -255:
@@ -52,7 +52,7 @@ class RadialCLosedLoop(Controller):
 
                 self.power_L = self.power_L - np.uint8(self.feedback_L)
 
-                self.power_R = 0 - d_dif - self.power_comp
+                self.power_R = d_dif - self.power_comp
                 if self.power_R > 255:
                     self.power_R = 255
                 if self.power_R < -255:
