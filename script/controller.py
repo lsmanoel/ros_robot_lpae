@@ -141,11 +141,6 @@ class Controller(object):
                 dynamic_dutycycle = False
             else:
                 dynamic_dutycycle = False 
-
-            if self.d_C > 200:
-                print('break power!!!!')
-                self.power_ref = np.uint8(0)
-                self.power_dif = np.uint8(0)
             
             d_dif = self.d_L - self.d_R
             # -------------------------------------------------------------------------
