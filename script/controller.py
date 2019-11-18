@@ -97,6 +97,7 @@ class Controller(object):
         while not rospy.is_shutdown():
             self.rate.sleep() 
             self.ctrl_mode = self.ctrl_mode_input
+            self.power_comp = self.power_comp_input
             self.d_L = self.d_L_input
             self.d_R = self.d_R_input
             self.d_C = self.d_C_input
