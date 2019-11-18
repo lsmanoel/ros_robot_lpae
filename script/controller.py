@@ -180,6 +180,11 @@ class Controller(object):
 
             self.power_R = self.power_R - np.uint8(self.feedback_R)
 
+            if self.d_C > 215:
+                print('break power!!!!')
+                self.power_L = 0
+                self.power_R = 0
+
             print('d_dif = self.d_L - self.d_R:', d_dif, self.d_L, self.d_R)
 
             print(self.power_L, self.power_R)
