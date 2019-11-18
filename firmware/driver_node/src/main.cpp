@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include <ros.h>
 #include <std_msgs/Int8.h>
+#include <std_msgs/UInt8.h>
+#include <std_msgs/Bool.h>
 
 #define USE_USBCON
 
@@ -31,34 +33,40 @@ ros::NodeHandle  nh;
 #define IN38 PD7
 
 //---------------------------------------
-std_msgs::Int8 dutycycle_L_msg, dutycycle_R_msg;
-int8_t dutycycle_L, spin_L, dutycycle_R, spin_R;
+std_msgs::UInt8 dutycycle_L_msg, dutycycle_R_msg;
+uint8_t dutycycle_L, dutycycle_R;
+std_msgs::Bool spin_L_msg, spin_R_msg;
+bool spin_L, spin_R;
 
-void dutycycle_L_callback(const std_msgs::Int8 &dutycycle_L_msg)
+//---------------------------------------
+void dutycycle_L_callback(const std_msgs::UInt8 &dutycycle_L_msg)
 {
     dutycycle_L = dutycycle_L_msg.data;
-    if(dutycycle_L < 0){
-      dutycycle_L = (-1)*dutycycle_L; 
-      spin_L = 0xff;
-    }
-    else{
-      spin_L = 0x00;
-    }
 }
-ros::Subscriber<std_msgs::Int8> sub_command_L("motor_power_L", &dutycycle_L_callback);
+ros::Subscriber<std_msgs::UInt8> sub_power_L("/power_L", &dutycycle_L_callback);
 
-void dutycycle_R_callback(const std_msgs::Int8 &dutycycle_R_msg)
+//---------------------------------------
+void spin_L_callback(const std_msgs::Bool &spin_L_msg)
+{
+    spin_L = spin_L_msg.data;
+
+}
+ros::Subscriber<std_msgs::Bool> sub_spin_L("/spin_L", &spin_L_callback);
+
+//---------------------------------------
+void dutycycle_R_callback(const std_msgs::UInt8 &dutycycle_R_msg)
 {
     dutycycle_R = dutycycle_R_msg.data;
-    if(dutycycle_R < 0){
-      dutycycle_R = (-1)*dutycycle_R;
-      spin_R = 0xff;
-    }
-    else{
-      spin_R = 0x00;
-    }
 }
-ros::Subscriber<std_msgs::Int8> sub_command_R("motor_power_R", &dutycycle_R_callback);
+ros::Subscriber<std_msgs::UInt8> sub_power_R("/power_R", &dutycycle_R_callback);
+
+//---------------------------------------
+void spin_R_callback(const std_msgs::Bool &spin_R_msg)
+{
+    spin_R = spin_R_msg.data;
+
+}
+ros::Subscriber<std_msgs::Bool> sub_spin_R("/spin_R", &spin_R_callback);
 
 //---------------------------------------
 void setup()
@@ -78,13 +86,17 @@ void setup()
     PORTD = 0x00;
   
     nh.initNode();
-    nh.subscribe(sub_command_L); 
-    nh.subscribe(sub_command_R);
+    nh.subscribe(sub_power_L); 
+    nh.subscribe(sub_spin_L);
+    nh.subscribe(sub_power_R); 
+    nh.subscribe(sub_spin_R);
 }
 
 void loop()
 {
-    for(uint8_t i=0; i<128; i++)
+    PORTB = 0x00;
+    PORTC = 0x00;
+    for(uint8_t i=0; i<256; i++)
     {     
       //---------------------------------------
       if(i > dutycycle_L)

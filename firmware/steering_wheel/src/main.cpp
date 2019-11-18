@@ -1,14 +1,15 @@
 #include<Wire.h>
 #include <ros.h>
 #include <std_msgs/Int8.h>
+#include <std_msgs/UInt8.h>
 #include <std_msgs/Bool.h>
 
 #define USE_USBCON
 
-const int L1 = 8;
-const int L2 = 9;
-const int R1 = 10;
-const int R2 = 11;
+const int A = 8;//L1
+const int B = 9;//L2
+const int C = 10;//R1
+const int D = 11;//R2
 
 //Endereco I2C do MPU6050
 const int MPU=0x68;
@@ -17,26 +18,27 @@ int8_t ACCEL_XOUT_H;
 int8_t ACCEL_XOUT_L;
 int8_t ACCEL_YOUT_H;
 int8_t ACCEL_YOUT_L;
-int8_t B_CTRL;
+uint8_t B_CTRL;
 
 ros::NodeHandle  nh;	
-std_msgs::Int8 power_ref, power_dif, ctrl;
+std_msgs::Int8 power_ref, power_dif;
+std_msgs::UInt8  ctrl_mode;
 
-ros::Publisher pub_power_ref("power_ref_ctrl", &power_ref);
-ros::Publisher pub_power_dif("power_dif_ctrl", &power_dif);
-ros::Publisher pub_ctrl("ctrl", &ctrl);
+ros::Publisher pub_power_ref("/power_ref", &power_ref);
+ros::Publisher pub_power_dif("/power_dif", &power_dif);
+ros::Publisher pub_ctrl_mode("/ctrl_mode", &ctrl_mode);
 //---------------------------------------
 void setup()
 {
-    pinMode(L1, INPUT);
-    pinMode(L2, INPUT);
-    pinMode(R1, INPUT);
-    pinMode(R2, INPUT);
+    pinMode(A, INPUT);
+    pinMode(B, INPUT);
+    pinMode(C, INPUT);
+    pinMode(D, INPUT);
 
     nh.initNode();
     nh.advertise(pub_power_ref); 
     nh.advertise(pub_power_dif);
-    nh.advertise(pub_ctrl);
+    nh.advertise(pub_ctrl_mode);
 
     Wire.begin();
     Wire.beginTransmission(MPU);
@@ -65,33 +67,24 @@ void loop()
     power_ref.data = ACCEL_XOUT_H;
     power_dif.data = ACCEL_YOUT_H;
     
-    power_ref.data = 0;
-    power_dif.data = 0;
-    
     B_CTRL = 0x00;
-    if(digitalRead(L1)==LOW){
+    if(digitalRead(A)==LOW){
         B_CTRL = 0b00000001;
-        power_ref.data = 2*ACCEL_XOUT_H;
     }
-    if(digitalRead(R1)==LOW){
+    if(digitalRead(B)==LOW){
         B_CTRL |= 0b00000010;
-        power_dif.data = 2*ACCEL_YOUT_H;
-    }   
-    if(digitalRead(L2)==LOW){
+    }
+    if(digitalRead(C)==LOW){
         B_CTRL |= 0b00000100;
-        power_ref.data = 0;
-        power_dif.data = -125;
-    }
-    if(digitalRead(R2)==LOW){
+    }   
+    if(digitalRead(D)==LOW){
         B_CTRL |= 0b00001000;
-        power_ref.data = 0;
-        power_dif.data = 125;
     }
-    ctrl.data = B_CTRL;
 
+    ctrl_mode.data = B_CTRL;
     pub_power_ref.publish(&power_ref);
     pub_power_dif.publish(&power_dif);
-    pub_ctrl.publish(&ctrl); 
+    pub_ctrl_mode.publish(&ctrl_mode); 
 
     //---------------------------------------
     nh.spinOnce();
